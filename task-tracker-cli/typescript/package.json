@@ -1,0 +1,20 @@
+{
+  "name": "task-tracker-cli",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "task-cli": "dist/app.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/app.js",
+    "dev": "ts-node --esm src/app.ts",
+    "lint": "echo \"(optional) add eslint later\"",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
