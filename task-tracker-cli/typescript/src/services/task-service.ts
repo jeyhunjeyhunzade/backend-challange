@@ -25,7 +25,7 @@ export class TaskService {
 
   async list(status?: TaskStatus): Promise<Task[]> {
     const tasks = await this.repo.loadAll();
-    //TODO: does it needed?
+    //TODO: if it's not needed, remove it
     if (status && !isValidStatus(status))
       throw new ValidationError("Invalid status");
 
