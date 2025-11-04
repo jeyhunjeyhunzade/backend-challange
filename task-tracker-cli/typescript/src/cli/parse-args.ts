@@ -16,7 +16,7 @@ export type ParsedArgs =
   | { command: "delete"; params: [string] }
   | { command: "list"; params: [TaskStatus?] }
   | { command: "mark-done" | "mark-in-progress"; params: [string] }
-  | { command: "help" | undefined; params: string[] };
+  | { command: "help"; params: string[] };
 
 export function parseArgs(argv: string[]): ParsedArgs {
   const [, , ...rest] = argv;
