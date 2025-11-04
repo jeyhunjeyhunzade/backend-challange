@@ -15,6 +15,13 @@ export async function route(
       console.log(`Task added successfully (ID: ${t.id})`);
       return 0;
     }
+    case "update": {
+      const [id, description] = params;
+
+      const t = await svc.update(id, description);
+      console.log(`Task updated successfully (ID: ${t.id})`);
+      return 0;
+    }
     case "list": {
       const [statusParam] = params;
       let status: TaskStatus | undefined;
