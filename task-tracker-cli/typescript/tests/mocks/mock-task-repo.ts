@@ -7,21 +7,21 @@ export class MockTaskRepo implements TaskRepo {
   private shouldFailSave = false;
 
   constructor(initialTasks: Task[] = []) {
-    this.tasks = [...initialTasks];
+    this.tasks = initialTasks;
   }
 
   async loadAll(): Promise<Task[]> {
     if (this.shouldFailLoad) {
       throw new Error("Mock load failure");
     }
-    return [...this.tasks]; // Return copy to avoid mutations
+    return this.tasks;
   }
 
   async saveAll(tasks: Task[]): Promise<void> {
     if (this.shouldFailSave) {
       throw new Error("Mock save failure");
     }
-    this.tasks = [...tasks]; // Store copy to avoid external mutations
+    this.tasks = tasks;
   }
 
   nextId(current: Task[]): number {
@@ -30,11 +30,11 @@ export class MockTaskRepo implements TaskRepo {
 
   // Test helper methods
   getTasks(): Task[] {
-    return [...this.tasks];
+    return this.tasks;
   }
 
   setTasks(tasks: Task[]): void {
-    this.tasks = [...tasks];
+    this.tasks = tasks;
   }
 
   simulateLoadFailure(): void {
