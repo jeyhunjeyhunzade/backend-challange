@@ -1,17 +1,17 @@
 [
   {
     "id": 1,
-    "description": "Buy new phone",
-    "status": "todo",
+    "description": "Buy iPhone 16 Pro",
+    "status": "done",
     "createdAt": "2025-10-20T19:25:38.651Z",
-    "updatedAt": "2025-11-04T20:36:21.755Z"
+    "updatedAt": "2025-11-11T12:59:01.736Z"
   },
   {
     "id": 2,
-    "description": "Get a new shoes",
-    "status": "todo",
+    "description": "Enroll a course",
+    "status": "in-progress",
     "createdAt": "2025-11-04T16:19:38.696Z",
-    "updatedAt": "2025-11-04T20:37:24.306Z"
+    "updatedAt": "2025-11-11T13:03:24.573Z"
   },
   {
     "id": 3,
