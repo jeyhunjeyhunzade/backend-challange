@@ -6,6 +6,44 @@ import { nowIso } from "../utils/time.js";
 export class TaskService {
   constructor(private readonly repo: TaskRepo) {}
 
+  private parseIdOrThrow(id: string | undefined, action: string): number {
+    if (!id) {
+      throw new ValidationError(`ID is required for ${action}`);
+    }
+    const n = Number(id);
+    if (Number.isNaN(n)) {
+      throw new ValidationError("ID must be a number");
+    }
+
+    return n;
+  }
+
+  private ensureNoDescription(
+    description: string | undefined,
+    action: string
+  ): string {
+    if (!description) {
+      throw new ValidationError(`Description is required for ${action}`);
+    }
+    const trimmed = description.trim();
+    if (!trimmed) {
+      throw new ValidationError("Description cannot be empty");
+    }
+    return trimmed;
+  }
+
+  private async findTaskOrThrow(
+    taskId: number,
+    originalIdForMsg: string
+  ): Promise<{ tasks: Task[]; task: Task }> {
+    const tasks = await this.repo.loadAll();
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) {
+      throw new NotFoundError(`Task with ID ${originalIdForMsg} not found`);
+    }
+    return { tasks, task };
+  }
+
   async add(description: string): Promise<Task> {
     const tasks = await this.repo.loadAll();
     const newTask: Task = {
@@ -21,32 +59,26 @@ export class TaskService {
   }
 
   async update(id: string, description: string): Promise<Task> {
-    if (!id) {
-      throw new ValidationError("ID is required for updating a task");
-    }
+    const taskId = this.parseIdOrThrow(id, "updating a task");
+    const taskDescription = this.ensureNoDescription(
+      description,
+      "updating a task"
+    );
 
-    let taskId = Number(id);
-    if (isNaN(taskId)) {
-      throw new ValidationError("ID must be a number");
-    }
+    const { tasks, task } = await this.findTaskOrThrow(taskId, id);
 
-    if (!description) {
-      throw new ValidationError("Description is required for updating a task");
-    }
-
-    if (!description.trim()) {
-      throw new ValidationError("Description cannot be empty");
-    }
-
-    const tasks = await this.repo.loadAll();
-    const task = tasks.find((t) => t.id === taskId);
-    if (!task) {
-      throw new NotFoundError(`Task with ID ${id} not found`);
-    }
-
-    task.description = description.trim();
+    task.description = taskDescription;
     task.updatedAt = nowIso();
-    console.log("Tasks is updated!: ", tasks);
+    await this.repo.saveAll(tasks);
+    return task;
+  }
+
+  async updateStatus(id: string, status: TaskStatus): Promise<Task> {
+    const taskId = this.parseIdOrThrow(id, "marking a task");
+
+    const { tasks, task } = await this.findTaskOrThrow(taskId, id);
+    task.status = status;
+    task.updatedAt = nowIso();
     await this.repo.saveAll(tasks);
     return task;
   }

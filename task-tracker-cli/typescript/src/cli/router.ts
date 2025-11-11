@@ -1,7 +1,7 @@
 import { TaskService } from "../services/task-service.js";
 import { ValidationError, NotFoundError } from "../domain/errors.js";
 import { isValidStatus, TaskStatus } from "../domain/task.js";
-import { Command, ParsedArgs } from "./parse-args.js";
+import { ParsedArgs } from "./parse-args.js";
 
 export async function route(
   svc: TaskService,
@@ -17,9 +17,20 @@ export async function route(
     }
     case "update": {
       const [id, description] = params;
-
       const t = await svc.update(id, description);
       console.log(`Task updated successfully (ID: ${t.id})`);
+      return 0;
+    }
+    case "mark-done": {
+      const [id] = params;
+      const t = await svc.updateStatus(id, "done");
+      console.log(`Task marked as done (ID: ${t.id})`);
+      return 0;
+    }
+    case "mark-in-progress": {
+      const [id] = params;
+      const t = await svc.updateStatus(id, "in-progress");
+      console.log(`Task marked as in-progress (ID: ${t.id})`);
       return 0;
     }
     case "list": {
