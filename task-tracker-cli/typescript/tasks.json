@@ -12,12 +12,5 @@
     "status": "in-progress",
     "createdAt": "2025-11-04T16:19:38.696Z",
     "updatedAt": "2025-11-11T13:03:24.573Z"
-  },
-  {
-    "id": 3,
-    "description": "Read a book",
-    "status": "todo",
-    "createdAt": "2025-11-04T16:39:11.298Z",
-    "updatedAt": "2025-11-04T16:39:11.303Z"
   }
 ]
