@@ -83,6 +83,14 @@ export class TaskService {
     return task;
   }
 
+  async delete(id: string): Promise<void> {
+    const taskId = this.parseIdOrThrow(id, "deleting a task");
+    const { tasks, task } = await this.findTaskOrThrow(taskId, id);
+    const index = tasks.indexOf(task);
+    tasks.splice(index, 1);
+    await this.repo.saveAll(tasks);
+  }
+
   async list(status?: TaskStatus): Promise<Task[]> {
     const tasks = await this.repo.loadAll();
     return status ? tasks.filter((t) => t.status === status) : tasks;

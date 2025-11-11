@@ -33,6 +33,12 @@ export async function route(
       console.log(`Task marked as in-progress (ID: ${t.id})`);
       return 0;
     }
+    case "delete": {
+      const [id] = params;
+      await svc.delete(id);
+      console.log(`Task deleted successfully (ID: ${id})`);
+      return 0;
+    }
     case "list": {
       const [statusParam] = params;
       let status: TaskStatus | undefined;
