@@ -16,6 +16,7 @@
     "test:watch": "npm run test:compile && node --test --watch dist/tests/**/*.test.js"
   },
   "devDependencies": {
+    "@types/node": "^24.10.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
