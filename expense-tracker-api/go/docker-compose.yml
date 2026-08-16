@@ -1,0 +1,44 @@
+# Local development dependencies for expense-tracker-api.
+#
+# Values are substituted from the .env file in this directory (Compose reads it
+# automatically), with fallbacks so `docker compose up` works before you have
+# copied .env.example. The app itself is not containerised yet — run it on the
+# host with `go run ./cmd/server`.
+#
+#   docker compose up -d      # start Postgres in the background
+#   docker compose ps         # check health
+#   docker compose down       # stop (data survives in the named volume)
+#   docker compose down -v    # stop and DELETE all data
+
+# Pinned explicitly: Compose otherwise derives the project name from the
+# directory, which is "go" here — and every implementation folder in this repo
+# is named after its language, so the names would collide across projects.
+name: expense-tracker-api
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: expense-tracker-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-expense}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-expense}
+      POSTGRES_DB: ${DB_NAME:-expense_tracker}
+    ports:
+      # Host port comes from DB_PORT so .env stays the single source of truth.
+      # Defaults to 5433 to avoid clashing with a local Postgres on 5432.
+      - "${DB_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # Lets `docker compose up --wait` and dependent services block until
+      # Postgres actually accepts connections, not just until the port opens.
+      test:
+        ["CMD-SHELL", "pg_isready -U ${DB_USER:-expense} -d ${DB_NAME:-expense_tracker}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  pgdata:
