@@ -1,0 +1,10 @@
+# Local environment — never commit
+.env
+.env.*
+!.env.example
+
+# Build artifacts
+bin/
+server
+*.test
+*.out
